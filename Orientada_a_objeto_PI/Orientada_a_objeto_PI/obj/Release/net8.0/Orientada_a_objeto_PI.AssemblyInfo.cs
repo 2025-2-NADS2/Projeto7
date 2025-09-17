@@ -12,7 +12,7 @@ using System;
 using System.Reflection;
 
 [assembly: System.Reflection.AssemblyCompanyAttribute("Orientada_a_objeto_PI")]
-[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f7a90a3be2fb7d3d6352a2e1d4dc4d6ff6f2bd1c")]
 [assembly: System.Reflection.AssemblyProductAttribute("Orientada_a_objeto_PI")]

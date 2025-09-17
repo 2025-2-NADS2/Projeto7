@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Orientada_a_objeto_PI
 {
-    class Publicacao
+    public class Publicacao
     {
         
     }

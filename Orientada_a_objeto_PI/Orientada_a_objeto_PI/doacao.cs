@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Orientada_a_objeto_PI
 {
-    class doacao
+
+
+    public class doacao
     {
         
     }
