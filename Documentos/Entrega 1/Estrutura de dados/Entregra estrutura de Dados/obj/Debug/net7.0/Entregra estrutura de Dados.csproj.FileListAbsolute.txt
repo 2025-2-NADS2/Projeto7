@@ -1,0 +1,14 @@
+C:\Users\PH\Downloads\Entregra_estrutura_de_Dados_final\Entregra estrutura de Dados\bin\Debug\net7.0\Entregra estrutura de Dados.exe
+C:\Users\PH\Downloads\Entregra_estrutura_de_Dados_final\Entregra estrutura de Dados\bin\Debug\net7.0\Entregra estrutura de Dados.deps.json
+C:\Users\PH\Downloads\Entregra_estrutura_de_Dados_final\Entregra estrutura de Dados\bin\Debug\net7.0\Entregra estrutura de Dados.runtimeconfig.json
+C:\Users\PH\Downloads\Entregra_estrutura_de_Dados_final\Entregra estrutura de Dados\bin\Debug\net7.0\Entregra estrutura de Dados.dll
+C:\Users\PH\Downloads\Entregra_estrutura_de_Dados_final\Entregra estrutura de Dados\bin\Debug\net7.0\Entregra estrutura de Dados.pdb
+C:\Users\PH\Downloads\Entregra_estrutura_de_Dados_final\Entregra estrutura de Dados\obj\Debug\net7.0\Entregra estrutura de Dados.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\PH\Downloads\Entregra_estrutura_de_Dados_final\Entregra estrutura de Dados\obj\Debug\net7.0\Entregra estrutura de Dados.AssemblyInfoInputs.cache
+C:\Users\PH\Downloads\Entregra_estrutura_de_Dados_final\Entregra estrutura de Dados\obj\Debug\net7.0\Entregra estrutura de Dados.AssemblyInfo.cs
+C:\Users\PH\Downloads\Entregra_estrutura_de_Dados_final\Entregra estrutura de Dados\obj\Debug\net7.0\Entregra estrutura de Dados.csproj.CoreCompileInputs.cache
+C:\Users\PH\Downloads\Entregra_estrutura_de_Dados_final\Entregra estrutura de Dados\obj\Debug\net7.0\Entregra estrutura de Dados.dll
+C:\Users\PH\Downloads\Entregra_estrutura_de_Dados_final\Entregra estrutura de Dados\obj\Debug\net7.0\refint\Entregra estrutura de Dados.dll
+C:\Users\PH\Downloads\Entregra_estrutura_de_Dados_final\Entregra estrutura de Dados\obj\Debug\net7.0\Entregra estrutura de Dados.pdb
+C:\Users\PH\Downloads\Entregra_estrutura_de_Dados_final\Entregra estrutura de Dados\obj\Debug\net7.0\Entregra estrutura de Dados.genruntimeconfig.cache
+C:\Users\PH\Downloads\Entregra_estrutura_de_Dados_final\Entregra estrutura de Dados\obj\Debug\net7.0\ref\Entregra estrutura de Dados.dll
