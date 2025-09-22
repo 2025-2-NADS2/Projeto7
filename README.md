@@ -15,7 +15,7 @@
 ## Descrição
 
 <p align="center">
-<img src="Imagens/logo.png" alt="Instituto Alma" border="0">
+<img src="Imagens/git.png" alt="Instituto Alma" border="0">
 </p>
 
 ##
