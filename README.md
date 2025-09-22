@@ -8,14 +8,14 @@
 
 ## DevMasters
 
-## Integrantes: <a href="http://www.linkedin.com/in/matheusfernandes2005">Matheus Fernandes Moraes</a>, <a href="linkedin.com/in/henri-seixas">Henri Seixas Souza</a>, <a href="https://www.linkedin.com/in/matheus-breda-andreo-6796b1350/">Ana Luiza Ribeiro do Vale</a>, <a href="https://www.linkedin.com/in/lucas-camargo-souza/">Pedro Henrique Araujo Del Picolo</a>
+## Integrantes: <a href="http://www.linkedin.com/in/matheusfernandes2005">Matheus Fernandes Moraes</a>, <a href="linkedin.com/in/henri-seixas">Henri Seixas Souza</a>, <a href="LINK DO LINKEDIN">Ana Luiza Ribeiro do Vale</a>, <a href="https://www.linkedin.com/in/pedro-henrique-ara%C3%BAjo-del-picolo-aa9444276?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_ap">Pedro Henrique Araujo Del Picolo</a>
 
 ## Professores Orientadores: <a href="https://www.linkedin.com/in/francisco-escobar/">Francisco de Souza Escobar</a>, <a href="https://www.linkedin.com/in/victorbarq/">Victor Bruno Alexander Rosetti de Quiroz</a>, <a href="https://www.linkedin.com/in/eduardo-savino-gomes-77833a10/">Eduardo Savino Gomes</a>, <a href="https://www.linkedin.com/in/ronaldo-araujo-pinto-3542811a/">Ronaldo Araujo Pinto</a>, <a href="https://www.linkedin.com/in/jbuesso/">José Carlos Buesso Jr</a>
 
 ## Descrição
 
 <p align="center">
-<img src="imagens/logo.png" alt="Instituto Alma" border="0">
+<img src="Imagens/logo.png" alt="Instituto Alma" border="0">
 </p>
 
 ##
