@@ -1,0 +1,1243 @@
+/* ============================================================
+   VARIÁVEIS DE TEMA
+   Troque as cores aqui e o site inteiro acompanha.
+   ============================================================ */
+:root{
+  /* Paleta principal */
+  --primaria:#2F4786;          /* azul forte (títulos, botões) */
+  --fundo:#DFF7FF;             /* fundo do site */
+
+  /* Secundárias */
+  --secundaria:#7A91B7;        /* “Faça uma doação” e “Admin” */
+  --secundaria-hover:#6b82a5;  /* leve escurecida no hover */
+  --apoio:#53698C;             /* áreas mais escuras / rodapé */
+
+  /* Superfície / elementos */
+  --superficie:#ffffff;
+  --borda:#c7d8ea;             /* linhas e contornos */
+  --chip:#eaf3ff;              /* pastilhas do menu */
+  --chip-hover:#6998d6;        /* hover das pastilhas */
+
+  /* Texto */
+  --texto:#0f1a2a;
+  --muted:#6480ac;
+
+  /* Rodapé (mesma família da logo) */
+  --rodape-azul:#B1EBFF;
+  --rodape-azul-hover:#4fa3c7;
+
+  /* Ícones do carrossel */
+  --arrow-color:var(--primaria);
+
+  /* Altura base do carrossel (teto do clamp) */
+  --h-carousel:360px;
+  --h-carousel-mobile:240px;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+*{ box-sizing:border-box }
+html,body,#root{ height:100% }
+
+body{
+  margin:0;
+  /* Tipos usados no projeto (Inter): ExtraLight, Light, SemiBold */
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight:300;                        /* Light */
+  background: var(--fundo);
+  color: var(--texto);
+}
+
+h1,h2,h3{ font-weight:600 }               /* SemiBold */
+p{ line-height:1.55 }
+a{ color:inherit }
+
+/* evita estouro lateral de mídias e bugs de scroll-x */
+img, svg, video{ max-width:100%; height:auto }
+html, body{ overflow-x:hidden }
+
+/* container padrão */
+.app{ display:flex; min-height:100%; flex-direction:column }
+.container{ width:min(1200px,92%); margin-inline:auto; padding:1.5rem 0 3rem }
+
+/* foco visível (acessibilidade) */
+:focus-visible{
+  outline: 3px solid color-mix(in srgb, var(--primaria) 50%, transparent);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   HEADER / NAVEGAÇÃO
+   ============================================================ */
+.header{
+  background:var(--superficie);
+  border-bottom:1px solid var(--borda);
+}
+.header-inner{
+  width:min(1200px,92%);
+  margin:0 auto;
+  display:grid;
+  gap:.6rem;
+  padding:.7rem 0 1rem;
+}
+
+/* linha superior (marca + botão do menu) */
+.topbar{ display:flex; align-items:center; justify-content:space-between; gap:1rem }
+
+/* marca (logo + nome) */
+.brand{ display:flex; align-items:center; gap:.9rem }
+.brand-logo-link{ display:inline-flex; align-items:center }
+/* >>> pedido: logo sempre com 70px <<< */
+.brand-logo-img{ height:70px; width:auto; display:block }
+
+.brand-title{ margin:0; line-height:1; color:var(--primaria) }
+.brand-sub{ margin:.1rem 0 0; color:var(--muted); font-size:.92rem }
+
+/* organização do topo em telas menores */
+@media (max-width:700px){
+  .topbar{
+    display:grid;
+    grid-template-columns: 1fr auto;   /* marca à esquerda, botão à direita */
+    align-items:center;
+    gap:.6rem;
+  }
+  .brand{ gap:.6rem; min-width:0 }
+  .brand-title{ font-size: clamp(20px, 5.5vw, 28px) }
+  .brand-sub{ font-size:.85rem }
+}
+@media (max-width:600px){
+  .brand-title{ font-size: clamp(18px, 6vw, 24px) }
+}
+
+/* navegação */
+.navbar{ display:flex; justify-content:center }
+.menu-items, .menu-items li{ list-style:none; margin:0; padding:0 }
+.menu-items{
+  display:flex; gap:.6rem; flex-wrap:wrap;
+  justify-content:center; align-items:center;
+}
+
+/* pastilhas padrão (Início, Sobre, Projetos, Como Ajudar, Contato) */
+.menu-items a{
+  display:inline-block;
+  padding:.55rem .9rem;
+  border:1px solid var(--borda);
+  border-radius:1rem;
+  text-decoration:none;
+  color:var(--texto);
+  background:var(--chip);
+  transition: background-color .18s ease, border-color .18s ease, color .18s ease, filter .18s ease;
+}
+.menu-items a:hover{
+  background: var(--chip-hover);
+  border-color: #b7c7df;
+}
+
+/* link ativo */
+.menu-items a.ativo{
+  background: linear-gradient(180deg,#3f5db5,var(--primaria));
+  color:#fff;
+  border-color:transparent;
+}
+
+/* destaques (Faça uma doação / Admin) */
+.menu-destaque a{
+  background: var(--secundaria);
+  color:#fff;
+  border-color:transparent;
+  transition: background-color .18s ease, filter .18s ease;
+}
+.menu-destaque a:hover{ background: var(--secundaria-hover) }
+
+/* Botão do menu (hambúrguer) — escondido no desktop */
+.btn-menu{
+  display:none;                 /* <- desktop: some */
+  background:#fff;
+  border:1px solid var(--borda);
+  border-radius:.6rem;
+  padding:.45rem .55rem;
+  cursor:pointer;
+
+  /* barras empilhadas */
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+}
+.btn-menu .lin{
+  width:22px; height:2px; background:var(--primaria); border-radius:2px;
+}
+
+/* (opcional) anima para “X” quando o menu abre */
+.btn-menu.aberto .lin:nth-child(1){ transform: translateY(6px) rotate(45deg); }
+.btn-menu.aberto .lin:nth-child(2){ opacity:0; }
+.btn-menu.aberto .lin:nth-child(3){ transform: translateY(-6px) rotate(-45deg); }
+.btn-menu .lin{ transition: transform .2s ease, opacity .2s ease; }
+
+/* Mobile: mostra o botão e esconde/mostra a navbar */
+@media (max-width:900px){
+  .btn-menu{ display:inline-flex; }      /* <- mobile: aparece */
+  .navbar{ display:none; }
+  .navbar.aberta{ display:block; }
+  .menu-items{
+    flex-direction:column; align-items:stretch; gap:.5rem; margin-top:.6rem;
+  }
+  .menu-items a{ width:100%; text-align:center; padding:.65rem 1rem; }
+}
+
+
+/* ============================================================
+   ELEMENTOS COMUNS
+   ============================================================ */
+.page h2{ margin-top:0 }
+.muted{ color:var(--muted) }
+
+/* grid 12 colunas utilitário */
+.grid{ display:grid; grid-template-columns:repeat(12,1fr); gap:1rem }
+@media (max-width:900px){ .grid{ grid-template-columns:repeat(6,1fr) } }
+@media (max-width:640px){ .grid{ grid-template-columns:repeat(2,1fr) } }
+
+/* card genérico */
+.card{
+  grid-column:span 4;
+  background:var(--superficie);
+  border:1px solid var(--borda);
+  border-radius:1rem;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  box-shadow:0 2px 8px rgba(0,0,0,.05);
+}
+.card-img{ width:100%; height:180px; object-fit:cover }
+.card-body{ padding:1rem }
+.card-title{ margin:.2rem 0 .4rem; font-size:1.12rem }
+.card-text{ color:var(--muted) }
+
+/* botões */
+.btn{
+  display:inline-block; padding:.6rem .9rem; border-radius:.7rem;
+  background:var(--primaria); border:0; color:#fff; font-weight:600; cursor:pointer;
+  transition: filter .15s ease;
+}
+.btn:hover{ filter:brightness(1.05) }
+.btn-ghost{ background:#f0f6ff; border:1px solid var(--borda); color:var(--texto) }
+
+/* formulários */
+.form{ margin:1rem 0; display:grid; gap:.8rem }
+.form-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:.8rem }
+.form input,.form select,.form textarea{
+  width:100%; padding:.6rem; border-radius:.6rem;
+  background:#f5f9ff; border:1px solid var(--borda); color:var(--texto);
+}
+@media (max-width:900px){ .form-row{ grid-template-columns:1fr } }
+
+.list{ list-style:none; padding:0; margin:1rem 0; display:grid; gap:.6rem }
+.list-item{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:.8rem 1rem; background:var(--superficie);
+  border:1px solid var(--borda); border-radius:.8rem;
+}
+.notice{
+  margin-top:1rem; padding:.9rem 1rem;
+  border-left:4px solid var(--primaria);
+  background:#e9f1ff; color:#17305f; border-radius:.5rem;
+}
+
+/* atalhos do painel admin */
+.admin-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:8px }
+.admin-card{
+  background:var(--chip); border:1px solid var(--borda);
+  padding:14px; border-radius:.8rem; text-decoration:none; color:var(--texto);
+}
+.admin-card:hover{ background:var(--chip-hover) }
+
+/* ============================================================
+   PORTAL ALMA / LOGIN
+   ============================================================ */
+.pagina-portal{
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+.titulo-portal{
+  margin-bottom: .5rem;
+}
+.sub-portal{
+  color: var(--muted);
+  margin-bottom: 1.2rem;
+}
+.portal-opcoes{
+  display:flex;
+  gap:1rem;
+  flex-wrap:wrap;
+  margin-bottom:1.4rem;
+}
+.portal-opcao{
+  background: #fff;
+  border:1px solid var(--borda);
+  padding:.6rem 1.3rem;
+  border-radius:.9rem;
+  cursor:pointer;
+  transition: background .15s ease, border-color .15s ease;
+}
+.portal-opcao.ativo{
+  background: #e4f0ff;
+  border-color: #aac1de;
+}
+.portal-form{
+  background:#fff;
+  border:1px solid var(--borda);
+  border-radius:1rem;
+  padding:1.2rem 1.4rem;
+  max-width:440px;
+  display:grid;
+  gap:.8rem;
+  box-shadow:0 10px 26px rgba(0,0,0,.02);
+}
+.portal-form .field span{
+  display:block;
+  margin-bottom:.3rem;
+  font-size:.9rem;
+}
+.portal-form input{
+  width:100%;
+  padding:.5rem .7rem;
+  border-radius:.6rem;
+  border:1px solid var(--borda);
+  background:#f5f9ff;
+}
+.portal-form .erro{
+  color:#d9534f;
+  font-size:.9rem;
+  margin-top:.2rem;
+}
+.btn-primaria{
+  background: var(--primaria);
+  border:0;
+  color:#fff;
+}
+.btn-primaria:disabled{
+  opacity:.7;
+  cursor:not-allowed;
+}
+
+/* ============================================================
+   PAINEL ADMIN (EVENTOS / ATIVIDADES)
+   ============================================================ */
+.admin-page{
+  padding-top:2rem;
+  padding-bottom:3rem;
+  display:block;
+}
+.titulo-admin{
+  margin-bottom:1.2rem;
+}
+.admin-form{
+  background:#fff;
+  border:1px solid var(--borda);
+  border-radius:1rem;
+  padding:1.1rem 1.2rem 1.3rem;
+  max-width:520px;
+  display:grid;
+  gap:.6rem;
+  margin-bottom:1.7rem;
+  box-shadow:0 10px 28px rgba(0,0,0,.02);
+}
+.admin-form-titulo{
+  margin:0 0 .4rem;
+  font-size:1.02rem;
+  color:var(--texto);
+}
+.admin-form input,
+.admin-form textarea{
+  width:100%;
+  padding:.5rem .7rem;
+  border-radius:.6rem;
+  border:1px solid var(--borda);
+  background:#f5f9ff;
+}
+.admin-form textarea{
+  min-height:80px;
+  resize:vertical;
+}
+.admin-lista{
+  list-style:none;
+  padding:0;
+  display:grid;
+  gap:1rem;
+}
+.admin-item{
+  background:#fff;
+  border:1px solid var(--borda);
+  border-radius:1rem;
+  padding:1rem 1.1rem;
+  display:flex;
+  justify-content:space-between;
+  gap:1rem;
+  align-items:flex-start;
+  box-shadow:0 5px 16px rgba(0,0,0,.02);
+}
+.btn-perigo{
+  background:#d9534f;
+  border:0;
+  color:#fff;
+  padding:.4rem .7rem;
+  border-radius:.6rem;
+  cursor:pointer;
+}
+@media (max-width:700px){
+  .admin-item{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+  .portal-opcoes{
+    flex-direction:column;
+  }
+}
+
+/* ============================================================
+   HOME (herói + carrossel + cards)
+   ============================================================ */
+.home{ width:min(1200px,92%); margin:0 auto }
+
+/* bloco herói (imagem + texto) */
+.inicio{
+  display:grid; grid-template-columns:1.1fr 1fr;
+  gap:20px; align-items:center;
+  background:#eef6ff; border:1px solid var(--borda);
+  border-radius:1rem; padding:16px; margin:8px 0 18px;
+}
+.inicio img{
+  width:100%;
+  height: clamp(220px, 42vw, 420px);  /* altura fluída */
+  object-fit:cover; border-radius:.8rem; display:block;
+}
+.inicio-texto h2{ font-size:clamp(24px,3.2vw,40px); margin:.2rem 0 }
+.inicio-texto h2 span{ color:var(--primaria) }
+.inicio-texto p{ font-size:1.05rem; color:#22314e }
+
+@media (max-width:900px){
+  .inicio{ grid-template-columns:1fr }
+}
+
+/* carrossel */
+.carousel{
+  position:relative; overflow:hidden;
+  border-radius:.8rem; background:var(--superficie);
+  border:1px solid var(--borda);
+  height: clamp(200px, 38vw, var(--h-carousel));  /* fluído */
+  box-shadow:0 2px 8px rgba(0,0,0,.05);
+}
+@media (max-width:900px){
+  .carousel{ height: clamp(160px, 40vw, var(--h-carousel-mobile)) }
+}
+
+/* slides */
+.slide{ position:absolute; inset:0; opacity:0; transform:scale(1.02);
+        transition:opacity .5s ease, transform .5s ease }
+.slide.ativo{ position:relative; opacity:1; transform:scale(1) }
+
+/* imagem do slide ocupa a área toda */
+.slide img{ width:100%; height:100%; object-fit:cover; display:block }
+
+/* setas do carrossel */
+.nav{
+  position:absolute; top:50%; transform:translateY(-50%);
+  padding:.35rem .55rem; border-radius:.6rem; border:1px solid var(--borda);
+  background:#fff; cursor:pointer; transition: filter .15s ease;
+}
+.nav:hover{ filter:brightness(0.98) }
+.prev{ left:10px } .next{ right:10px }
+.nav svg{ width:28px; height:28px; color:var(--arrow-color) }
+
+/* cards inferiores (3 colunas -> 1 no mobile) */
+.content-row{
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:16px; margin-top:16px;
+}
+@media (max-width:900px){ .content-row{ grid-template-columns:1fr } }
+
+.content{
+  background:var(--superficie); border:1px solid var(--borda);
+  border-radius:.8rem; padding:16px; text-align:center;
+}
+.content img{ border-radius:10px; width:100%; height:auto }
+.content p{ font-size:.95rem; color:var(--muted); text-align:justify }
+
+/* ============================================================
+   PROJETOS (cards grandes com tarja)
+   ============================================================ */
+.grade-projetos{
+  display:grid; grid-template-columns:repeat(2,1fr);
+  gap:28px;
+}
+@media (max-width:900px){ .grade-projetos{ grid-template-columns:1fr } }
+
+.card-projeto{
+  position:relative; border:1px solid var(--borda); border-radius:14px;
+  overflow:hidden; background:var(--superficie);
+  box-shadow:0 2px 12px rgba(0,0,0,.06);
+}
+.card-projeto img{
+  width:100%;
+  height: clamp(220px, 34vw, 348px);
+  object-fit:cover; display:block;
+}
+.card-projeto .tarja{
+  position:absolute; left:0; right:0; bottom:0;
+  background:rgba(122,145,183,.70); color:#fff;
+  padding:14px 18px; text-decoration:none; display:block;
+}
+.card-projeto .tarja h3{
+  margin:0; font-size:clamp(18px,2.4vw,26px);
+  text-shadow:0 1px 2px rgba(0,0,0,.25); font-weight:600;
+}
+
+/* ============================================================
+   RODAPÉ
+   ============================================================ */
+.rodape{
+  margin-top:auto; background:var(--apoio); color:#dff3ff;
+}
+.rodape-conteudo{
+  width:min(1200px,92%); margin:0 auto; padding:28px 0;
+  display:grid; gap:24px; grid-template-columns:2fr 1fr 1fr;
+}
+
+/* logo do rodapé (maior) */
+.rodape-logo{ height:72px }
+@media (max-width:900px){ .rodape-logo{ height:56px } }
+
+/* títulos do rodapé na cor do logotipo */
+.rodape-col h4{
+  margin:.3rem 0 1rem; font-weight:600; color:var(--rodape-azul);
+}
+
+/* links e ícones do rodapé seguem currentColor */
+.rodape-col a, .rodape-redes a{
+  color:var(--rodape-azul); text-decoration:none;
+  transition: color .18s ease, opacity .18s ease;
+}
+.rodape-col a:hover, .rodape-redes a:hover{
+  color:var(--rodape-azul-hover);      /* mais escuro no hover */
+}
+
+.rodape-redes{ display:flex; gap:12px; margin-top:10px }
+
+/* responsivo do rodapé: 3 -> 2 -> 1 colunas */
+@media (max-width:900px){ .rodape-conteudo{ grid-template-columns:1fr 1fr } }
+@media (max-width:640px){ .rodape-conteudo{ grid-template-columns:1fr } }
+
+.rodape-base{
+  border-top:1px solid rgba(255,255,255,.25);
+  padding:10px 0; text-align:center; color:#e0eeff;
+}
+
+/* ====== admin pages ====== */
+.admin-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 3.5rem 1.5rem;
+}
+
+.admin-title {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #1c3458;
+}
+
+.admin-form {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 1.5rem 1.5rem 1.25rem 1.5rem;
+  box-shadow: 0 10px 30px rgba(2, 52, 94, 0.08);
+  max-width: 420px;
+}
+
+.admin-label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: #15304d;
+}
+
+.admin-input,
+.admin-textarea {
+  width: 100%;
+  border: 1px solid #d1dded;
+  border-radius: 10px;
+  padding: 0.6rem 0.7rem;
+  margin-bottom: 0.85rem;
+  background: #fafeff;
+  outline: none;
+}
+
+.admin-input:focus,
+.admin-textarea:focus {
+  border-color: #3a6dae;
+  background: #ffffff;
+}
+
+.admin-textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.admin-button {
+  width: 100%;
+  background: #264683;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 0.65rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.admin-button:hover {
+  background: #1e3766;
+}
+
+.admin-error {
+  color: #c0392b;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+/* lista de itens */
+.admin-lista-bloco {
+  margin-top: 2.5rem;
+}
+
+.admin-subtitle {
+  font-size: 1.35rem;
+  color: #1c3458;
+  margin-bottom: 1rem;
+}
+
+.admin-vazio {
+  color: #5a6c82;
+  font-size: 0.95rem;
+}
+
+.admin-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.admin-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 1.1rem 1.1rem 1rem 1.1rem;
+  box-shadow: 0 8px 26px rgba(2, 52, 94, 0.07);
+}
+
+.admin-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.45rem;
+}
+
+.admin-card h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: #142a46;
+}
+
+.admin-card-delete {
+  background: #f85e5e;
+  border: none;
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.admin-card-delete:hover {
+  background: #e33f3f;
+}
+
+/* ========= Edge-to-Edge Layout fix ========= */
+
+/* 1) Gutter (espaço lateral fluido) para TODAS as seções */
+:root {
+  --page-gutter: clamp(16px, 3vw, 40px);
+}
+
+/* 2) Zere qualquer largura fixa herdada de containers antigos */
+.site-wrapper,
+.page,
+main,
+section,
+.container,
+.content,
+.wrapper,
+.grid,
+.row {
+  max-width: none !important;
+  width: 100% !important;
+  box-sizing: border-box;
+}
+
+/* 3) Aplique gutters padronizados nas seções (sem precisar mexer no JSX) */
+main,
+section,
+header.site-header,
+footer.site-footer {
+  padding-left: var(--page-gutter);
+  padding-right: var(--page-gutter);
+}
+
+/* 4) Grid base (cards/listas) ocupando a largura toda */
+.grid,
+.cards-grid,
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: clamp(12px, 2vw, 24px);
+}
+
+/* 5) Helper para faixas "de ponta a ponta" (hero, carrossel, doações) */
+.full-bleed {
+  width: 100vw !important;
+  margin-left: 50% !important;
+  transform: translateX(-50%) !important;
+  padding-left: var(--page-gutter);
+  padding-right: var(--page-gutter);
+}
+
+/* Se sua Home tem um "hero" e/ou carrossel, garanta que ocupem 100% */
+.hero,
+.hero-strip,
+.carousel,
+.doacoes-hero,
+.projects-hero {
+  width: 100%;
+}
+
+/* 6) Split responsivo para a tela de Doações (coluna esquerda + cartão à direita) */
+.doacoes-split {
+  display: grid;
+  grid-template-columns: 1.3fr minmax(320px, 0.9fr);
+  gap: clamp(16px, 3vw, 28px);
+}
+@media (max-width: 900px) {
+  .doacoes-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 7) Header e footer sempre 100% */
+.site-header,
+.site-footer {
+  width: 100%;
+}
+
+/* 8) As imagens/carrossel não podem “quebrar” o layout */
+img,
+video,
+canvas {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 9) Evita que algum container antigo centralize com margin:auto */
+[class*="container"] {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* ===== Sticky footer (vale para TODO o site, inclusive páginas curtas) ===== */
+html, body, #root {
+  height: 100%;
+}
+
+.app-frame {
+  min-height: 100dvh;           /* cobre viewport em desktop e mobile */
+  display: flex;
+  flex-direction: column;       /* header -> main -> footer em coluna */
+}
+
+.main-content {
+  flex: 1 0 auto;               /* ocupa todo o espaço entre header e footer */
+  display: block;
+}
+
+.site-footer {
+  margin-top: auto;             /* empurra o footer para a base quando faltar conteúdo */
+}
+
+/* === Sticky footer apenas no site público === */
+html, body, #root {
+  height: 100%;
+}
+
+.public-app {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.public-app .main-content {
+  flex: 1 0 auto;
+}
+
+.public-app .rodape {
+  position: static;
+  margin-top: auto;
+  z-index: 1;
+}
+
+/* === Portal Alma (login) === */
+.portal-login {
+  display: flex;
+  justify-content: center;
+  padding: 40px 16px 64px;
+}
+
+.portal-card {
+  width: 100%;
+  max-width: 520px;            /* largura moderada */
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+}
+
+.portal-titulo {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 16px;
+  color: #1f2a44;
+  text-align: center;
+}
+
+.papel-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.btn-toggle {
+  border: 1px solid #c7d2fe;
+  background: #f5f7ff;
+  color: #1f2a44;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-weight: 600;
+  transition: 0.15s ease-in-out;
+}
+
+.btn-toggle.ativo {
+  background: #355588;
+  color: #fff;
+  border-color: #355588;
+  box-shadow: 0 6px 14px rgba(53, 85, 136, 0.25);
+}
+
+.portal-form .lbl {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #42526e;
+  margin: 12px 0 6px;
+}
+
+.portal-form .inp {
+  width: 100%;
+  height: 42px;
+  border: 1px solid #d6dde8;
+  border-radius: 10px;
+  padding: 0 12px;
+  outline: none;
+  transition: border-color 0.15s ease;
+  background: #fbfdff;
+}
+
+.portal-form .inp:focus {
+  border-color: #355588;
+  box-shadow: 0 0 0 3px rgba(53, 85, 136, 0.15);
+}
+
+.btn-entrar {
+  width: 100%;
+  height: 44px;
+  margin-top: 16px;
+  border: none;
+  border-radius: 10px;
+  background: #2f4d80; /* seu azul do tema */
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  transition: transform 0.05s ease-in-out, background 0.15s;
+}
+
+.btn-entrar:hover {
+  background: #2a4471;
+}
+
+.btn-entrar:active {
+  transform: translateY(1px);
+}
+
+.msg-erro {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #ffecec;
+  color: #a33;
+  border: 1px solid #ffcdcd;
+  font-size: 14px;
+}
+
+.ajuda, .dicas {
+  margin-top: 10px;
+  font-size: 12.5px;
+  color: #667085;
+}
+
+.dicas code {
+  background: #f2f4f7;
+  border: 1px solid #e5e7eb;
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+
+/* ===== Portal Alma ===== */
+.portal-alma {
+  max-width: 520px;
+  margin: 48px auto;
+  padding: 0 16px;
+}
+
+.portal-alma__titulo {
+  margin: 0 0 16px 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* botões de perfil */
+.portal-alma__roles {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin: 8px 0 16px;
+}
+.role-btn {
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid #cfd8dc;
+  background: #eef3f6;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all .15s ease;
+}
+.role-btn:hover { filter: brightness(0.97); }
+.role-btn.is-active {
+  background: #2e7d32;
+  border-color: #2e7d32;
+  color: #fff;
+}
+
+/* card do form */
+.portal-alma__card {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.portal-alma__label {
+  font-weight: 600;
+}
+
+.portal-alma__input {
+  padding: 10px 12px;
+  border: 1px solid #cfcfcf;
+  border-radius: 6px;
+  outline: none;
+  width: 100%;
+}
+.portal-alma__input:focus {
+  border-color: #2e7d32;
+  box-shadow: 0 0 0 3px rgba(46,125,50,0.15);
+}
+
+.portal-alma__senha-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.portal-alma__mostrar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.portal-alma__alerta {
+  background: #ffe8e8;
+  color: #b00020;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.portal-alma__botao {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #2e7d32;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter .15s ease;
+}
+.portal-alma__botao:hover { filter: brightness(0.95); }
+.portal-alma__botao.is-disabled,
+.portal-alma__botao:disabled {
+  background: #9e9e9e;
+  cursor: not-allowed;
+  filter: none;
+}
+
+.portal-alma__rodape {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+.portal-alma__dica {
+  font-size: 12px;
+  opacity: .8;
+}
+
+.api-ping { font-size: 12px; opacity: .8; }
+.api-ping.ok { color: #2e7d32; }
+.api-ping.fail { color: #b00020; }
+
+
+.admin-pg .form-card { display:grid; gap:10px; padding:16px; border:1px solid #e0e0e0; border-radius:8px; background:#fff; }
+.admin-pg .grid2 { display:grid; gap:10px; grid-template-columns: 1fr 1fr; }
+.admin-pg .btn-primary { padding:10px 14px; border:none; border-radius:6px; background:#2e7d32; color:#fff; font-weight:600; cursor:pointer; }
+.admin-pg .btn-danger { padding:6px 10px; background:#b00020; color:#fff; border:none; border-radius:4px; }
+.tbl { width:100%; border-collapse: collapse; margin-top:12px; }
+.tbl th, .tbl td { border:1px solid #ddd; padding:8px; }
+.tbl .acoes { display:flex; gap:8px; }
+
+
+
+/* layout base */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.alert.warn {
+  background: #fff3cd;
+  border: 1px solid #ffe69c;
+  color: #7a5900;
+  padding: 10px 12px;
+  border-radius: 8px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+/* cartões simples */
+.cards { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); }
+.card {
+  background: #fff;
+  border: 1px solid #e3e8ef;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 1px 2px rgba(16,24,40,.04);
+}
+
+/* Portal Alma – form básico */
+.portal-alma {
+  max-width: 420px;
+  margin: 24px 0 32px;
+  padding: 16px;
+  background: #f7fbff;
+  border: 1px solid #e3eefc;
+  border-radius: 12px;
+}
+
+.portal-alma .tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+.portal-alma .tabs button {
+  border: 1px solid #d0d7e2;
+  background: #e9eef7;
+  color: #1a2b4a;
+  padding: 8px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.portal-alma .tabs button.ativo { background: #2e7d32; color: #fff; border-color: #2e7d32; }
+
+.portal-alma label { display:block; font-weight:600; margin: 8px 0 4px; }
+.portal-alma input {
+  width: 100%;
+  border: 1px solid #cfd7e3;
+  border-radius: 8px;
+  padding: 8px 10px;
+  outline: none;
+}
+.portal-alma .submit {
+  width: 100%;
+  margin-top: 12px;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  background: #2e7d32;
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+}
+.portal-alma .erro { color: #c62828; margin-top: 8px; }
+
+
+/* grade de projetos: só título + imagem */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
+  gap: 16px;
+  margin-top: 12px;
+}
+.tile {
+  text-decoration: none;
+  color: inherit;
+}
+.tile figure {
+  background: #fff;
+  border: 1px solid #e3e8ef;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(16,24,40,.04);
+}
+.thumb {
+  width: 100%;
+  height: 160px;
+  background: #f0f3f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.noimg {
+  font-size: .9rem;
+  color: #62708a;
+}
+figure figcaption {
+  padding: 10px 12px;
+  font-weight: 600;
+}
+
+/* detalhe do projeto */
+.projeto-detalhe .hero {
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid #e3e8ef;
+  margin: 8px 0 16px;
+}
+.projeto-detalhe .texto {
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+
+/* === Projetos: cards maiores e responsivos === */
+.gallery {
+  display: grid;
+  /* cards mais largos por padrão */
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+/* em telas médias, cards ainda maiores */
+@media (min-width: 768px) {
+  .gallery {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 22px;
+  }
+}
+
+/* em telas largas, bem espaçosos */
+@media (min-width: 1200px) {
+  .gallery {
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 24px;
+  }
+}
+
+/* caixa do card */
+.tile figure {
+  border-radius: 14px;
+  border: 1px solid #e3e8ef;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(16,24,40,.06);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.tile figure:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(16,24,40,.12);
+}
+
+/* área da imagem: mais alta e com proporção agradável */
+.thumb {
+  width: 100%;
+  height: 220px;              /* antes ~160px */
+  background: #f2f5fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+@media (min-width: 768px) {
+  .thumb { height: 260px; }   /* sobe mais no tablet/desktop */
+}
+@media (min-width: 1200px) {
+  .thumb { height: 300px; }   /* bem vistoso em telas grandes */
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* título mais legível */
+figure figcaption {
+  padding: 12px 14px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  line-height: 1.35;
+}
