@@ -1,126 +1,94 @@
-// server/src/index.js
-import express from "express";
-import cors from "cors";
-import path from "path";
-import { fileURLToPath } from "url";
-import dotenv from "dotenv";
+// ESM: este arquivo funciona com "type": "module"
+import 'dotenv/config';
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import morgan from 'morgan';
+import rateLimit from 'express-rate-limit';
 
-dotenv.config();
+// Se seus routers estiverem em src/ ao lado deste arquivo, mantenha assim.
+// Se estiverem em src/routes, ajuste os paths para './routes/auth.js', etc.
+import authRouter from './auth.js';
+import projetosRouter from './projetos.js';
+import uploadsRouter from './uploads.js';
 
 const app = express();
+const PORT = process.env.PORT || 8080;
 
-/* ----------------------------- CORS ----------------------------- */
 /**
- * Ex.: CORS_ORIGIN="http://localhost:5173,https://seu-front.vercel.app,https://*.vercel.app"
+ * CORS dinâmico com whitelist por ENV:
+ * - Defina CORS_ORIGINS como lista separada por vírgula
+ *   (ex.: "http://localhost:5173,https://seuapp.vercel.app,https://*.azurewebsites.net")
  */
-const allowList = (process.env.CORS_ORIGIN || "")
-  .split(",")
+const envOrigins = (process.env.CORS_ORIGINS || '')
+  .split(',')
   .map(s => s.trim())
   .filter(Boolean);
 
-const isVercel = o =>
-  typeof o === "string" && /\.vercel\.app$/i.test(o);
+// Patterns úteis (mantém flexível para vercel e azure)
+const defaultPatterns = [
+  /^http:\/\/localhost:(3000|5173)$/,
+  /^https:\/\/.*\.vercel\.app$/,
+  /^https:\/\/.*\.azurewebsites\.net$/,
+];
 
-const corsOptions = {
-  origin(origin, cb) {
-    if (!origin) return cb(null, true); // Postman/cURL
-    const allowed = allowList.includes(origin) || isVercel(origin);
-    return cb(allowed ? null : new Error("Not allowed by CORS"), allowed);
-  },
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
-  allowedHeaders: "Content-Type, Authorization",
-  credentials: false,
-};
-
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
-
-/* ----------------------- Parsers & estáticos -------------------- */
-app.use(express.json({ limit: "5mb" }));
-app.use(express.urlencoded({ extended: true }));
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
-
-/* --------------------------- Health ----------------------------- */
-/**
- * Tenta dar um ping no DB SEM derrubar o servidor se faltar env/DB.
- * Se o módulo de DB falhar no import, ainda assim respondemos com ok:false.
- */
-app.get("/api/health", async (req, res) => {
-  try {
-    // Só tenta importar se existir o módulo
-    const db = await import("./services/db.js").catch(() => null);
-
-    if (db?.pingWithTimeout) {
-      try {
-        await db.pingWithTimeout(2000);
-        return res.json({ ok: true, db: "up", ts: new Date().toISOString() });
-      } catch (e) {
-        return res.status(503).json({
-          ok: false,
-          db: "down",
-          error: e?.message || "db-timeout",
-          ts: new Date().toISOString(),
-        });
-      }
-    }
-
-    // Sem módulo de DB: responde ok do servidor em si
-    return res.json({ ok: true, db: "unknown", ts: new Date().toISOString() });
-  } catch (e) {
-    return res.status(500).json({ ok: false, error: "health-failed" });
-  }
-});
-
-/* ----------------------- Montagem das rotas --------------------- */
-/**
- * IMPORTANTE: usamos import dinâmico para evitar que um erro de env
- * em alguma rota derrube o processo ANTES do health responder.
- */
-async function mountRoutes() {
-  try {
-    const [
-      authRoutes,
-      projetosRoutes,
-      eventosRoutes,
-      doacoesRoutes,
-      contatosRoutes,
-      uploadsRoutes,
-    ] = await Promise.all([
-      import("./routes/auth.js").catch(() => null),
-      import("./routes/projetos.js").catch(() => null),
-      import("./routes/eventos.js").catch(() => null),
-      import("./routes/doacoes.js").catch(() => null),
-      import("./routes/contatos.js").catch(() => null),
-      import("./routes/uploads.js").catch(() => null),
-    ]);
-
-    if (authRoutes?.default) app.use("/api/auth", authRoutes.default);
-    if (projetosRoutes?.default) app.use("/api/projetos", projetosRoutes.default);
-    if (eventosRoutes?.default) app.use("/api/eventos", eventosRoutes.default);
-    if (doacoesRoutes?.default) app.use("/api/doacoes", doacoesRoutes.default);
-    if (contatosRoutes?.default) app.use("/api/contatos", contatosRoutes.default);
-    if (uploadsRoutes?.default) app.use("/api/uploads", uploadsRoutes.default);
-
-    console.log("[API] Rotas montadas.");
-  } catch (e) {
-    console.error("[API] Falha ao montar rotas:", e?.message || e);
-  }
+function originAllowed(origin) {
+  if (!origin) return true; // allow same-origin/health checks
+  // match exact env origins
+  if (envOrigins.includes(origin)) return true;
+  // match patterns (vercel/azure)
+  return defaultPatterns.some(rx => rx.test(origin));
 }
-mountRoutes();
 
-/* ----------------------------- 404 ------------------------------ */
-app.use("/api", (req, res) => {
-  res.status(404).json({ error: "Rota não encontrada" });
+app.use(
+  cors({
+    origin: (origin, cb) => {
+      const ok = originAllowed(origin);
+      if (!ok) {
+        console.error('[CORS] Bloqueado:', origin);
+        return cb(new Error('Not allowed by CORS'));
+      }
+      // console.log('[CORS] Liberado:', origin);
+      cb(null, true);
+    },
+    credentials: true,
+  })
+);
+
+app.use(helmet());
+app.use(express.json({ limit: '2mb' }));
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan('dev'));
+
+// Rate limit básico (ajuste se quiser)
+const limiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 120,
+});
+app.use(limiter);
+
+// Healthcheck
+app.get('/healthz', (req, res) => {
+  res.json({ ok: true, uptime: process.uptime() });
 });
 
-/* --------------------------- Start ------------------------------ */
-// No Azure, PORT vem do ambiente. NÃO sete PORT manualmente no App Service.
-// DB_PORT = 3306 continua sendo só do MySQL.
-const PORT = process.env.PORT || 3333;
-app.listen(PORT, "0.0.0.0", () => {
+// Prefixo /api para todas as rotas
+app.use('/api/auth', authRouter);
+app.use('/api/projetos', projetosRouter);
+app.use('/api/uploads', uploadsRouter);
+
+app.use((req, res) => {
+  res.status(404).json({ error: 'Rota não encontrada' });
+});
+
+app.use((err, req, res, next) => {
+  console.error('[ERROR]', err?.message);
+  res.status(err.status || 500).json({
+    error: err.message || 'Erro interno do servidor',
+  });
+});
+
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`API ouvindo em http://0.0.0.0:${PORT}`);
+  console.log('[API] Rotas montadas.');
 });
