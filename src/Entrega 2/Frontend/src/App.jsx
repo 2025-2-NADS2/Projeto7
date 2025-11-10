@@ -10,7 +10,8 @@ import Inicio from "./pages/Inicio";
 import Sobre from "./pages/Sobre";
 import Projetos from "./pages/Projetos";
 import ProjetoDetalhe from "./pages/ProjetoDetalhe";
-import ComoAjudar from "./pages/ComoAjudar"; // <-- nome/case corretos
+//import ComoAjudar from "./pages/ComoAjudar"; // <-- nome/case corretos
+import ComoAjudar from"./pages/ProjetoDetalhe";
 import Contato from "./pages/Contato";
 import Doacoes from "./pages/Doacoes";
 import PortalAlma from "./pages/PortalAlma";
