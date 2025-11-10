@@ -1,5 +1,5 @@
 // src/App.jsx
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { RotaAdmin, RotaDoador } from "./rotas/Guards";
 
 import PublicLayout from "./layouts/PublicLayout";
@@ -10,7 +10,7 @@ import Inicio from "./pages/Inicio";
 import Sobre from "./pages/Sobre";
 import Projetos from "./pages/Projetos";
 import ProjetoDetalhe from "./pages/ProjetoDetalhe";
-import Comoajudar from "./pages/Comoajudar";
+import ComoAjudar from "./pages/ComoAjudar";
 import Contato from "./pages/Contato";
 import Doacoes from "./pages/Doacoes";
 import PortalAlma from "./pages/PortalAlma";
@@ -38,7 +38,12 @@ export default function App() {
         <Route path="/sobre" element={<Sobre />} />
         <Route path="/projetos" element={<Projetos />} />
         <Route path="/projetos/:id" element={<ProjetoDetalhe />} />
-        <Route path="/comoajudar" element={<Comoajudar />} />
+
+        {/* Rota canônica com hífen */}
+        <Route path="/como-ajudar" element={<ComoAjudar />} />
+        {/* Compatibilidade com URL antiga/sem hífen */}
+        <Route path="/comoajudar" element={<Navigate to="/como-ajudar" replace />} />
+
         <Route path="/contato" element={<Contato />} />
         <Route path="/doacoes" element={<Doacoes />} />
         <Route path="/eventos" element={<Evento />} />
