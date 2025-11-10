@@ -1,55 +1,56 @@
-// server/src/security.js
+// server/src/services/security.js
 const cors = require("cors");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 
-function applySecurity(app) {
-  // Helmet
-  app.use(
-    helmet({
-      contentSecurityPolicy: false,
-      crossOriginResourcePolicy: { policy: "cross-origin" },
-    })
-  );
-
-  // ---- CORS ----
+function buildCors() {
+  // Lê origens (separadas por vírgula) e normaliza
   const raw = process.env.CORS_ORIGIN || "";
-  const allowed = raw
+  const allowList = raw
     .split(",")
     .map(s => s.trim())
     .filter(Boolean);
 
-  const isAllowed = (origin) => {
-    if (!origin) return true; // Postman/curl
-    if (allowed.includes(origin)) return true;
-    // libera qualquer preview do Vercel se você tiver usado "*.vercel.app"
-    if (allowed.some(a => a.endsWith(".vercel.app")) && origin.endsWith(".vercel.app")) return true;
-    return false;
-  };
+  // Suporte simples a wildcard *.vercel.app
+  const hasVercelWildcard = allowList.some(o => o.includes("*.vercel.app"));
 
-  const corsOptions = {
-    origin(origin, cb) {
-      if (isAllowed(origin)) return cb(null, true);
-      return cb(new Error("Not allowed by CORS"));
+  return cors({
+    origin: function (origin, cb) {
+      // chamadas sem origin (ex: curl/health) liberamos
+      if (!origin) return cb(null, true);
+
+      const allowed =
+        allowList.includes(origin) ||
+        (hasVercelWildcard && /\.vercel\.app$/.test(origin));
+
+      cb(allowed ? null : new Error("CORS bloqueado para esta origem"), allowed);
     },
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+    maxAge: 86400, // cache do preflight
     optionsSuccessStatus: 204,
-    maxAge: 86400,
-    credentials: false,
-  };
+  });
+}
 
-  app.use(cors(corsOptions));
-  app.options("*", cors(corsOptions)); // atende preflight rápido
+function applySecurity(app) {
+  app.use(
+    helmet({
+      crossOriginResourcePolicy: { policy: "cross-origin" },
+    })
+  );
 
-  // Rate limit (opcional)
   const limiter = rateLimit({
-    windowMs: 60 * 1000,
-    limit: 300,
+    windowMs: 15 * 60 * 1000,
+    limit: 1000,
     standardHeaders: "draft-7",
     legacyHeaders: false,
   });
   app.use(limiter);
+
+  const corsMw = buildCors();
+  app.use(corsMw);
+  app.options("*", corsMw); // responde preflight em todas as rotas
 }
 
 module.exports = { applySecurity };
