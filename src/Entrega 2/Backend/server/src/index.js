@@ -1,90 +1,88 @@
 // server/src/index.js
-const path = require("path");
-require("dotenv").config({ path: path.join(process.cwd(), "server", ".env") });
+import express from "express";
+import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
+import dotenv from "dotenv";
 
-const express = require("express");
-const { applySecurity } = require("./security");          // helmet, cors, rate-limit, etc.
-const errorMiddleware = require("./middlewares/error");   // handler central de erros
-
-// Rotas
-const authRoutes = require("./routes/auth");
-const eventosRoutes = require("./routes/eventos");
-const projetosRoutes = require("./routes/projetos");
-const uploadsRoutes = require("./routes/uploads");        // POST /api/uploads/imagem
-
-// Pool só para health check
-const pool = require("./services/db");
+// Carrega variáveis de ambiente (.env) quando rodando localmente
+dotenv.config();
 
 const app = express();
 
+// --------- CORS (com preflight e allowlist por variável de ambiente) ---------
 /**
- * Azure/Proxy
- * Mantém IP correto em logs/cookies seguros quando atrás de proxy.
+ * CORS_ORIGIN pode estar assim:
+ *   http://localhost:5173,https://seu-front.vercel.app,https://*.vercel.app
  */
-app.set("trust proxy", 1);
+const rawAllow = process.env.CORS_ORIGIN || "";
+const list = rawAllow
+  .split(",")
+  .map(s => s.trim())
+  .filter(Boolean);
 
-// Body parsers
+// Permite wildcard do Vercel (https://*.vercel.app)
+const vercelWildcard = /\.vercel\.app$/;
+
+const corsOptions = {
+  origin(origin, cb) {
+    // Sem origin (ex.: curl/postman) -> permite
+    if (!origin) return cb(null, true);
+    const allowed =
+      list.includes(origin) ||
+      vercelWildcard.test(origin);
+    return cb(allowed ? null : new Error("Not allowed by CORS"), allowed);
+  },
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+  allowedHeaders: "Content-Type, Authorization",
+  credentials: false
+};
+
+app.use(cors(corsOptions));
+// Responde a todos os preflights
+app.options("*", cors(corsOptions));
+
+// --------- Parsers e estáticos ---------
 app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true }));
 
-// Segurança + CORS (usa CORS_ORIGIN do .env dentro de applySecurity)
-applySecurity(app);
+// Serve arquivos enviados (capas etc.) em /uploads
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 
-/**
- * Arquivos estáticos de upload (imagens)
- * - Disponíveis em /uploads/arquivo.png
- * - Alias em /api/uploads/arquivo.png para compatibilidade com o front
- */
-const uploadsDir = path.join(process.cwd(), "server", "uploads");
-
-app.use(
-  "/uploads",
-  express.static(uploadsDir, {
-    fallthrough: true,
-    maxAge: "7d",
-    immutable: false,
-  })
-);
-
-app.use(
-  "/api/uploads",
-  express.static(uploadsDir, {
-    fallthrough: true,
-    maxAge: "7d",
-    immutable: false,
-  })
-);
-
-// ====== Prefixo /api nas rotas de aplicação ======
-app.use("/api/auth", authRoutes);
-app.use("/api/eventos", eventosRoutes);
-app.use("/api/projetos", projetosRoutes);
-app.use("/api/uploads", uploadsRoutes); // POST /api/uploads/imagem
-
-/**
- * Health-check com teste de DB
- * GET /api/health -> { ok:true, db:true }
- */
-app.get("/api/health", async (_req, res) => {
-  try {
-    const [rows] = await pool.query("SELECT 1 AS ok");
-    res.json({ ok: true, db: rows?.[0]?.ok === 1 });
-  } catch (e) {
-    res.status(500).json({ ok: false, db: false, erro: e.message });
-  }
+// --------- Healthcheck ---------
+app.get("/api/health", (req, res) => {
+  res.status(200).json({ ok: true, time: new Date().toISOString() });
 });
 
-// 404 para qualquer outra rota não mapeada
-app.use((req, res) => res.status(404).json({ erro: "Rota não encontrada" }));
+// --------- Rotas da API ---------
+import authRoutes from "./routes/auth.js";
+import projetosRoutes from "./routes/projetos.js";
+import eventosRoutes from "./routes/eventos.js";
+import doacoesRoutes from "./routes/doacoes.js";
+import contatosRoutes from "./routes/contatos.js";
+import uploadsRoutes from "./routes/uploads.js";
 
-// Middleware central de erros (mantém logs/formatos)
-app.use(errorMiddleware);
+app.use("/api/auth", authRoutes);
+app.use("/api/projetos", projetosRoutes);
+app.use("/api/eventos", eventosRoutes);
+app.use("/api/doacoes", doacoesRoutes);
+app.use("/api/contatos", contatosRoutes);
+app.use("/api/uploads", uploadsRoutes);
 
-// Sobe o servidor
+// --------- 404 (API) ---------
+app.use("/api", (req, res) => {
+  res.status(404).json({ error: "Rota não encontrada" });
+});
+
+// --------- Inicialização ---------
+// IMPORTANTE: no Azure, a porta vem de process.env.PORT.
+// Não defina PORT na App Service manualmente.
+// Mantenha DB_PORT (3306) apenas para o MySQL.
 const PORT = process.env.PORT || 3333;
-app.listen(PORT, () => {
-  console.log(`API rodando na porta ${PORT}`);
-  if (process.env.CORS_ORIGIN) {
-    console.log(`[CORS] origin permitido: ${process.env.CORS_ORIGIN}`);
-  }
+
+// Ouça em 0.0.0.0 para aceitar conexões externas no Azure
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`API ouvindo em http://0.0.0.0:${PORT}`);
 });
