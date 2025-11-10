@@ -1,0 +1,102 @@
+/* =======================================================================
+   BASE – somente quando .admin-body estiver no <body>
+   ======================================================================= */
+html, body { height: 100%; }
+
+body.admin-body{
+  margin:0;
+  background:#e6f3fa;             /* leve azul do site */
+  color:#1e2a35;
+  font:400 16px/1.4 "Inter",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  overflow-x:hidden;
+}
+
+.public-app{ display:contents; }
+
+/* =======================================================================
+   GRID
+   ======================================================================= */
+.admin-shell{
+  display:grid;
+  grid-template-columns:240px minmax(0,1fr);
+  min-height:100vh;
+}
+
+/* =======================================================================
+   SIDEBAR
+   ======================================================================= */
+.admin-sidebar{
+  background:#0f2741;
+  color:#cfe4f7;
+  display:flex; flex-direction:column;
+  padding:18px 14px;
+  position:sticky; top:0; height:100vh;
+  box-shadow:inset -1px 0 0 rgba(255,255,255,.075);
+}
+
+.admin-brand{ display:flex; align-items:baseline; gap:8px; font-weight:700; letter-spacing:.4px; margin-bottom:20px; }
+.admin-brand-logo{ font-size:20px; color:#fff; }
+.admin-brand-text{ font-size:14px; color:#7fb2ff; font-weight:600; }
+
+.admin-nav{ display:flex; flex-direction:column; gap:6px; margin-top:8px; }
+
+.admin-navlink{
+  display:flex; align-items:center; gap:10px;
+  padding:10px 12px; border-radius:10px;
+  color:#cfe4f7; text-decoration:none;
+  transition:background .2s ease, color .2s ease;
+}
+.admin-navlink:hover{ background:rgba(255,255,255,.08); color:#fff; }
+/* ativo pelo NavLink v6 (className fn) + fallback por aria-current */
+.admin-navlink.active,
+.admin-navlink[aria-current="page"]{ background:#0b1d30; color:#fff; }
+
+.nav-ico{ width:20px; text-align:center; }
+
+.admin-sidebar-footer{ margin-top:auto; padding-top:12px; }
+.admin-logout{
+  width:100%; border:0; border-radius:10px; padding:12px;
+  background:#1d3e6b; color:#e5f1ff; font-weight:600; cursor:pointer;
+}
+.admin-logout:hover{ background:#234a7e; }
+
+/* =======================================================================
+   CONTEÚDO
+   ======================================================================= */
+.admin-content{ display:flex; flex-direction:column; min-width:0; background:#f7fbff; }
+
+.admin-topbar{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  background:#fff; padding:14px 18px; border-bottom:1px solid #e7eef7;
+  position:sticky; top:0; z-index:10; box-shadow:0 1px 0 rgba(0,0,0,.03);
+}
+.admin-page-title{ margin:0; font-size:18px; font-weight:700; color:#1d2e43; }
+.admin-user{ display:flex; align-items:center; gap:8px; color:#1d2e43; }
+.user-name{ font-weight:600; }
+.user-ava{ font-size:18px; }
+
+.admin-page{ padding:24px 28px; }
+
+/* utilitários comuns */
+.admin-card{
+  background:#fff; border:1px solid #e7eef7; border-radius:14px; box-shadow:0 1px 0 rgba(0,0,0,.03); padding:16px;
+}
+.btn-primary{
+  background:#274f87; color:#fff; border:0; border-radius:10px; padding:10px 14px; font-weight:700; cursor:pointer;
+}
+.btn-primary:hover{ background:#2e5ea3; }
+.admin-input,.admin-textarea{
+  width:100%; background:#fff; border:1px solid #d9e6f5; border-radius:10px; padding:10px 12px; font:inherit; color:#1e2a35;
+}
+.admin-textarea{ min-height:120px; resize:vertical; }
+
+/* =======================================================================
+   RESPONSIVO
+   ======================================================================= */
+@media (max-width:1024px){
+  .admin-shell{ grid-template-columns:220px 1fr; }
+}
+@media (max-width:820px){
+  .admin-shell{ grid-template-columns:1fr; }
+  .admin-sidebar{ position:relative; height:auto; }
+}

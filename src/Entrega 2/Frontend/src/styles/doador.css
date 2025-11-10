@@ -1,0 +1,100 @@
+/* =========================================================
+   BASE – quando .doador-body estiver no <body>
+   ========================================================= */
+html, body{ height:100%; }
+
+body.doador-body{
+  margin:0;
+  background:#e9fbf2;                    /* verde-claro suave */
+  color:#132d22;
+  font:400 16px/1.4 "Inter",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  overflow-x:hidden;
+}
+
+.public-app{ display:contents; }
+
+/* =========================================================
+   GRID
+   ========================================================= */
+.doador-shell{
+  display:grid;
+  grid-template-columns:240px minmax(0,1fr);
+  min-height:100vh;
+}
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+.doador-sidebar{
+  background:#0c3d2a; color:#d8f2e7;
+  display:flex; flex-direction:column;
+  padding:18px 14px;
+  position:sticky; top:0; height:100vh;
+  box-shadow:inset -1px 0 0 rgba(255,255,255,.08);
+}
+
+.doador-marca{ display:flex; align-items:baseline; gap:8px; font-weight:700; letter-spacing:.4px; margin-bottom:20px; }
+.doador-marca-logo{ font-size:20px; color:#fff; }
+.doador-marca-texto{ font-size:14px; color:#9be7c5; font-weight:600; }
+
+.doador-nav{ display:flex; flex-direction:column; gap:6px; }
+
+.doador-link{
+  display:flex; align-items:center; gap:10px;
+  padding:10px 12px; border-radius:10px;
+  color:#d8f2e7; text-decoration:none;
+  transition:background .2s ease, color .2s ease;
+}
+.doador-link:hover{ background:rgba(255,255,255,.08); color:#fff; }
+/* ativo pelo NavLink v6 (className fn) + fallback por aria-current */
+.doador-link.active,
+.doador-link[aria-current="page"]{ background:#0a2f21; color:#fff; }
+
+.ico{ width:20px; text-align:center; }
+
+.doador-rodape-sidebar{ margin-top:auto; padding-top:12px; }
+.btn-sair{
+  width:100%; border:0; border-radius:10px; padding:12px;
+  background:#146a49; color:#e9fff6; font-weight:600; cursor:pointer;
+}
+.btn-sair:hover{ background:#187e59; }
+
+/* =========================================================
+   CONTEÚDO
+   ========================================================= */
+.doador-conteudo{ display:flex; flex-direction:column; min-width:0; background:#f5fffb; }
+
+.doador-topo{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  background:#fff; padding:14px 18px; border-bottom:1px solid #e2f3eb;
+  position:sticky; top:0; z-index:10; box-shadow:0 1px 0 rgba(0,0,0,.03);
+}
+.doador-titulo{ margin:0; font-size:18px; font-weight:700; color:#153a2a; }
+.doador-usuario{ display:flex; align-items:center; gap:8px; color:#153a2a; }
+.usuario-nome{ font-weight:600; }
+.usuario-ico{ font-size:18px; }
+
+.doador-pagina{ padding:24px 28px; }
+
+/* utilitários */
+.card-doador{
+  background:#fff; border:1px solid #e2f3eb; border-radius:14px; padding:16px;
+  box-shadow:0 1px 0 rgba(0,0,0,.03);
+}
+.btn-verde{
+  background:#146a49; color:#fff; border:0; border-radius:10px; padding:10px 14px; font-weight:700; cursor:pointer;
+}
+.btn-verde:hover{ background:#187e59; }
+.campo,.campo-mensagem{
+  width:100%; background:#fff; border:1px solid #cfeadc; border-radius:10px; padding:10px 12px; font:inherit; color:#132d22;
+}
+.campo-mensagem{ min-height:120px; resize:vertical; }
+
+/* Responsivo */
+@media (max-width:1024px){
+  .doador-shell{ grid-template-columns:220px 1fr; }
+}
+@media (max-width:820px){
+  .doador-shell{ grid-template-columns:1fr; }
+  .doador-sidebar{ position:relative; height:auto; }
+}
