@@ -1,6 +1,5 @@
 // src/pages/ComoAjudar.jsx
 import { useState } from "react";
-import { useState }from "./pages/ProjetoDetalhe"
 
 export default function ComoAjudar() {
   const [formulario, setFormulario] = useState({

@@ -10,8 +10,7 @@ import Inicio from "./pages/Inicio";
 import Sobre from "./pages/Sobre";
 import Projetos from "./pages/Projetos";
 import ProjetoDetalhe from "./pages/ProjetoDetalhe";
-//import ComoAjudar from "./pages/ComoAjudar"; // <-- nome/case corretos
-import ComoAjudar from"./pages/ProjetoDetalhe";
+import ComoAjudar from "./pages/ComoAjudar";
 import Contato from "./pages/Contato";
 import Doacoes from "./pages/Doacoes";
 import PortalAlma from "./pages/PortalAlma";
@@ -39,7 +38,7 @@ export default function App() {
         <Route path="/sobre" element={<Sobre />} />
         <Route path="/projetos" element={<Projetos />} />
         <Route path="/projetos/:id" element={<ProjetoDetalhe />} />
-        <Route path="/como-ajudar" element={<ComoAjudar />} /> {/* <-- rota amigável */}
+        <Route path="/como-ajudar" element={<ComoAjudar />} />
         <Route path="/contato" element={<Contato />} />
         <Route path="/doacoes" element={<Doacoes />} />
         <Route path="/eventos" element={<Evento />} />
