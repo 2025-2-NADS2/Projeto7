@@ -17,7 +17,6 @@ export default function ComoAjudar() {
 
   function enviar(e) {
     e.preventDefault();
-    // simulação nesta etapa do projeto
     setEnviado(true);
     setFormulario({
       nome: "",
@@ -38,19 +37,13 @@ export default function ComoAjudar() {
       <section className="cards" style={{ marginTop: 16 }}>
         <article className="card">
           <h2>Doação Financeira</h2>
-          <p>
-            Sua contribuição mantém nossas ações de apoio nutricional,
-            educacional e social.
-          </p>
+          <p>Sua contribuição mantém nossas ações de apoio nutricional, educacional e social.</p>
           <a className="btn" href="/doacoes">Doar agora</a>
         </article>
 
         <article className="card">
           <h2>Doação de Alimentos</h2>
-          <p>
-            Arroz, feijão, macarrão, leite em pó e itens de higiene são sempre
-            bem-vindos. Entre em contato para combinar a entrega.
-          </p>
+          <p>Arroz, feijão, macarrão, leite em pó e itens de higiene são sempre bem-vindos. Entre em contato para combinar a entrega.</p>
           <a className="btn btn-ghost" href="/contato">Falar com a equipe</a>
         </article>
 
@@ -62,10 +55,7 @@ export default function ComoAjudar() {
 
         <article className="card">
           <h2>Parcerias</h2>
-          <p>
-            Empresas e organizações podem contribuir com recursos, serviços e
-            campanhas conjuntas para ampliar nosso impacto.
-          </p>
+          <p>Empresas e organizações podem contribuir com recursos, serviços e campanhas conjuntas para ampliar nosso impacto.</p>
           <a className="btn btn-ghost" href="/contato">Propor parceria</a>
         </article>
 
@@ -86,10 +76,7 @@ export default function ComoAjudar() {
       <h2 id="voluntariado" style={{ marginTop: 20 }}>Quero ser voluntário(a)</h2>
 
       <form className="portal-alma" onSubmit={enviar} style={{ maxWidth: 660 }}>
-        <div
-          className="form-row"
-          style={{ display: "grid", gap: 12, gridTemplateColumns: "1fr 1fr 1fr" }}
-        >
+        <div className="form-row" style={{ display: "grid", gap: 12, gridTemplateColumns: "1fr 1fr 1fr" }}>
           <label>Nome
             <input name="nome" value={formulario.nome} onChange={mudar} required />
           </label>
@@ -116,9 +103,7 @@ export default function ComoAjudar() {
           />
         </label>
 
-        <button className="submit" type="submit" style={{ marginTop: 12 }}>
-          Enviar
-        </button>
+        <button className="submit" type="submit" style={{ marginTop: 12 }}>Enviar</button>
       </form>
 
       {enviado && (
