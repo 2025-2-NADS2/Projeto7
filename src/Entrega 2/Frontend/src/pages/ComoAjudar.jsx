@@ -17,21 +17,17 @@ export default function ComoAjudar() {
 
   function enviar(e) {
     e.preventDefault();
+    // simulação de envio
     setEnviado(true);
-    setFormulario({
-      nome: "",
-      email: "",
-      interesse: "voluntariado",
-      mensagem: "",
-    });
+    setFormulario({ nome: "", email: "", interesse: "voluntariado", mensagem: "" });
   }
 
   return (
     <main className="container">
       <h1>Como Ajudar</h1>
       <p className="muted">
-        Existem diversas formas de apoiar o Instituto Alma: doação financeira,
-        doação de alimentos, voluntariado, parcerias e divulgação.
+        Existem diversas formas de apoiar o Instituto Alma: doação financeira, doação de alimentos,
+        voluntariado, parcerias e divulgação.
       </p>
 
       <section className="cards" style={{ marginTop: 16 }}>
@@ -43,7 +39,10 @@ export default function ComoAjudar() {
 
         <article className="card">
           <h2>Doação de Alimentos</h2>
-          <p>Arroz, feijão, macarrão, leite em pó e itens de higiene são sempre bem-vindos. Entre em contato para combinar a entrega.</p>
+          <p>
+            Arroz, feijão, macarrão, leite em pó e itens de higiene são sempre bem-vindos.
+            Entre em contato para combinar a entrega.
+          </p>
           <a className="btn btn-ghost" href="/contato">Falar com a equipe</a>
         </article>
 
@@ -55,7 +54,10 @@ export default function ComoAjudar() {
 
         <article className="card">
           <h2>Parcerias</h2>
-          <p>Empresas e organizações podem contribuir com recursos, serviços e campanhas conjuntas para ampliar nosso impacto.</p>
+          <p>
+            Empresas e organizações podem contribuir com recursos, serviços e campanhas conjuntas
+            para ampliar nosso impacto.
+          </p>
           <a className="btn btn-ghost" href="/contato">Propor parceria</a>
         </article>
 
