@@ -1,21 +1,48 @@
-// server/src/services/db.js
-const mysql = require("mysql2/promise");
+// server-deploy/src/services/db.js
+const mysql = require('mysql2/promise');
 
-// Habilita SSL por padrão (Azure exige TLS >= 1.2).
-// Se quiser desabilitar em desenvolvimento local, defina DB_SSL=false no .env.
-const useSSL = (process.env.DB_SSL ?? "true").toLowerCase() !== "false";
-const ssl = useSSL ? { minVersion: "TLSv1.2" } : undefined;
+function env(name, def) {
+  return process.env[name] ?? def ?? '';
+}
 
-const pool = mysql.createPool({
-  host: process.env.DB_HOST || "localhost",
-  port: Number(process.env.DB_PORT || 3306),
-  user: process.env.DB_USER || "root",
-  password: process.env.DB_PASSWORD || "",
-  database: process.env.DB_NAME || "alma",
+function required(name, fallbackName) {
+  const v = env(name) || (fallbackName ? env(fallbackName) : '');
+  if (!v) throw new Error(`[DB] Variável de ambiente ausente: ${name}${fallbackName ? ` (ou ${fallbackName})` : ''}`);
+  return v;
+}
+
+const config = {
+  host: required('DB_HOST'),
+  user: required('DB_USER'),
+  password: required('DB_PASSWORD'),
+  database: required('DB_DATABASE', 'DB_NAME'), // <-- aceita ambos
+  port: Number(env('DB_PORT', '3306')),
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0,
-  ssl, // <- aqui
-});
+  enableKeepAlive: true,
+  ssl: String(env('DB_SSL', 'false')).toLowerCase() === 'true' ? { rejectUnauthorized: false } : undefined,
+};
 
-module.exports = pool;
+let pool;
+
+/** Retorna um pool único (lazy) */
+function getPool() {
+  if (!pool) pool = mysql.createPool(config);
+  return pool;
+}
+
+/** Ping com timeout para usar no /api/health */
+async function pingWithTimeout(ms = 2000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), ms);
+
+  try {
+    const p = getPool();
+    await p.query('SELECT 1');
+    return { ok: true };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+module.exports = { getPool, pingWithTimeout };
