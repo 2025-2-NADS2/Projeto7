@@ -168,8 +168,7 @@ Base: `/api`
 ---
 
 ## 🎥 Vídeo Demonstrativo
-- Adicione aqui o link do vídeo (YouTube/Drive) mostrando:  
-  **Projetos → Detalhe → Login Portal Alma → Painel Admin → CRUD com upload → Lista atualizada**.
+[▶️ Assista ao vídeo](Imagens/demonstracao_site.mp4)
 
 ---
 
