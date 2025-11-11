@@ -65,10 +65,6 @@ Raiz/
             └─ .env.example         # variáveis de ambiente (sem segredos)
 ```
 
-> ✅ **Você NÃO precisa mudar a estrutura local.** Para o deploy, informe aos provedores a **pasta raiz do projeto** (Vercel → `src/Entrega 2/Frontend`; Azure/Railway/Render → `src/Entrega 2/Backend/server`).
-
----
-
 ## ▶️ Como Rodar Localmente
 
 ### 1) Backend (API)
@@ -168,22 +164,6 @@ Base: `/api`
 - **CORS_ORIGIN:** inclua `https://SEU-PROJETO.vercel.app` e, se desejar, `https://*.vercel.app` para previews
 - **Health check:** `https://SUA-API-PUBLICA.com/api/health`
 
----
-
-## 🔎 Testes Rápidos
-
-```bash
-# Health
-curl https://SUA-API-PUBLICA.com/api/health
-
-# Login (ajuste payload)
-curl -X POST https://SUA-API-PUBLICA.com/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"perfil":"admin","email":"admin@alma.org","senha":"123456"}'
-
-# Projetos
-curl https://SUA-API-PUBLICA.com/api/projetos
-```
 
 ---
 
@@ -193,15 +173,6 @@ curl https://SUA-API-PUBLICA.com/api/projetos
 
 ---
 
-## ✅ Requisitos Atendidos (2ª Entrega)
-- SPA React (router, responsivo, mensagens de erro/loading)  
-- Integração real Front ↔ Back (axios)  
-- Autenticação JWT + rotas protegidas  
-- CRUD completo + **upload** com Multer  
-- Deploy completo (front + back)  
-- README com instruções e links
-
----
 
 ## 📜 Licença
 PI_ALMA © 2025 by Matheus Fernandes Moraes, Henri Seixas Souza, Ana Luiza Ribeiro do Vale, Pedro Henrique Araújo Del Picolo is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
