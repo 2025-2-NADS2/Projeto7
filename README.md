@@ -204,7 +204,9 @@ curl https://SUA-API-PUBLICA.com/api/projetos
 ---
 
 ## 📜 Licença
-Escolha uma licença **Creative Commons** adequada em: <https://chooser-beta.creativecommons.org/>
+PI_ALMA © 2025 by Matheus Fernandes Moraes, Henri Seixas Souza, Ana Luiza Ribeiro do Vale, Pedro Henrique Araújo Del Picolo is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+
+
 
 ---
 
