@@ -1,66 +1,50 @@
-// Arquivo para a camada de acesso à API no front (Vite/React)
+// src/lib/api.js
+import axios from "axios";
 
-import axios from 'axios';
+// Normaliza base: acrescenta /api caso o .env tenha vindo sem ele
+function computeBaseUrl() {
+  const fromEnv = import.meta.env.VITE_API_URL?.trim();
+  if (fromEnv) {
+    const url = fromEnv.replace(/\/+$/, "");         // remove barras finais
+    return url.endsWith("/api") ? url : `${url}/api`;
+  }
+  // fallback dev/local
+  return import.meta.env.DEV ? "http://localhost:3333/api" : "/api";
+}
 
-/**
- * Base URL:
- * 1) VITE_API_URL no .env da UI (recomendado)
- * 2) window.__API_URL__ (se quiser injetar via script)
- * 3) fallback para mesmo host + /api (quando front e API estão juntos)
- */
-const envUrl =
-  (typeof import.meta !== 'undefined' &&
-    import.meta.env &&
-    import.meta.env.VITE_API_URL) ||
-  (typeof window !== 'undefined' && window.__API_URL__) ||
-  `${window.location.origin}/api`;
+const API_BASE = computeBaseUrl();
 
 export const api = axios.create({
-  baseURL: envUrl.replace(/\/+$/, ''), // tira barra final
-  timeout: 30000,
+  baseURL: API_BASE,
   withCredentials: false,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  timeout: 15000,
 });
 
-// --------- Endpoints de conveniência ---------
+// Anexa token salvo (se houver)
+api.interceptors.request.use((config) => {
+  try {
+    const raw = localStorage.getItem("alma_auth");
+    if (raw) {
+      const { token } = JSON.parse(raw);
+      if (token) config.headers.Authorization = `Bearer ${token}`;
+    }
+  } catch {}
+  return config;
+});
 
-export const AuthAPI = {
-  login: async (email, senha) => {
-    const { data } = await api.post('/auth/login', { email, senha });
-    return data;
-  },
-};
+export default {
+  get: api.get,
+  post: api.post,
+  put: api.put,
+  delete: api.delete,
 
-export const ProjetosAPI = {
-  listar: async () => {
-    const { data } = await api.get('/projetos');
+  // Endpoints de auth
+  async login({ perfil, email, senha }) {
+    const { data } = await api.post("/auth/login", { perfil, email, senha });
     return data;
   },
-  criar: async (payload) => {
-    const { data } = await api.post('/projetos', payload);
-    return data;
-  },
-  atualizar: async (id, payload) => {
-    const { data } = await api.put(`/projetos/${id}`, payload);
-    return data;
-  },
-  remover: async (id) => {
-    const { data } = await api.delete(`/projetos/${id}`);
-    return data;
-  },
-};
-
-// Uploads (se usar multipart no admin)
-export const UploadsAPI = {
-  uploadImagem: async (file) => {
-    const form = new FormData();
-    form.append('file', file);
-    const { data } = await api.post('/uploads', form, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-      timeout: 60000,
-    });
+  async me() {
+    const { data } = await api.get("/auth/me");
     return data;
   },
 };
