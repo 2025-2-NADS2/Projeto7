@@ -19,7 +19,7 @@
 ## 📝 Descrição
 
 <p align="center">
-![DevMasters](Imagens/git.png)
+<img src="Imagens/git.png" alt="DevMasters" width="200">
 </p>
 
 Site responsivo para o **Instituto Alma** com foco em transparência e captação: páginas públicas (Início, Sobre, **Projetos** com detalhe, Como Ajudar, Contato), **Portal Alma** (login de doador/admin) e **painel administrativo** (CRUD de projetos com **upload de imagens**).  
